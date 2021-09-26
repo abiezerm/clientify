@@ -4,7 +4,7 @@ import Img from "next/image";
 import Link from "next/link";
 
 import styled from "styled-components";
-import { Layout, Menu, Breadcrumb, Modal } from "antd";
+import { Layout, Menu, Modal } from "antd";
 import {
   PieChartOutlined,
   TeamOutlined,
@@ -53,7 +53,7 @@ export default function AdminLayout({ children }: Props): ReactElement {
             style={{ height: "100%", borderRight: 0 }}
           >
             <Menu.Item key="1" icon={<PieChartOutlined />}>
-              <Link href="/admin/">Dashboard</Link>
+              <Link href="/">Dashboard</Link>
             </Menu.Item>
             <Menu.Item key="2" icon={<TeamOutlined />}>
               <Link href="/admin/customers">Customers</Link>

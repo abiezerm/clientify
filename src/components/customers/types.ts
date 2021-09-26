@@ -1,5 +1,5 @@
 export interface Customer {
-  key: any;
+  key?: any;
   id: string;
   firstName: string;
   lastName: string;

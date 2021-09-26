@@ -1,6 +1,9 @@
 import { Breadcrumb, Button, Card, Col, Layout, Row } from "antd";
 import Head from "next/head";
+import { useState } from "react";
+import CustomerFormModal from "../../../components/customers/CustomersFormModal";
 import CustomersTable from "../../../components/customers/CustomersTable";
+import { Customer } from "../../../components/customers/types";
 
 const customers = [
   {
@@ -8,20 +11,54 @@ const customers = [
     id: "asdasd",
     firstName: "Lewandy",
     lastName: "Dilone Bonifacio",
-    addresses: [1, 2],
+    addresses: [
+      {
+        key: "blif7fo7fo68f",
+        zip: 51000,
+        city: "Santiago de los Caballeros",
+        address: "La herradura",
+        country: "Republica Dominicana",
+      },
+      {
+        key: "jhf2f7tfo8t4f",
+        zip: 231,
+        city: "New York",
+        address: "Santiago",
+        country: "United State",
+      },
+    ],
   },
   {
     key: "2",
     id: "fghghehgf",
     firstName: "Evan",
     lastName: "You",
-    addresses: [1, 2, 3, 4, 5, 6],
+    addresses: [
+      {
+        key: "blif7fo7fo68f",
+        zip: 51000,
+        city: "Santiago de los Caballeros",
+        address: "Baitoa",
+        country: "Republica Dominicana",
+      },
+      {
+        key: "jhf2f7tfo8t4f",
+        zip: 231,
+        city: "New York",
+        address: "Santo Domingo",
+        country: "United State",
+      },
+    ],
   },
 ];
 
 export default function Index() {
-  const onEdit = () => {
-    //TODO: Edit a customer
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+  const [customer, setCustomer] = useState<Customer | null>(null);
+
+  const onEdit = (customer: Customer) => {
+    setCustomer(customer);
+    setIsModalVisible(true);
   };
 
   const onDelete = () => {
@@ -44,12 +81,32 @@ export default function Index() {
           <Col span={24}>
             <Card
               title="List of customers"
-              extra={<Button type="primary">New Customer</Button>}
+              extra={
+                <Button
+                  onClick={() => {
+                    setIsModalVisible(true);
+                  }}
+                  type="primary"
+                >
+                  New Customer
+                </Button>
+              }
             >
               <CustomersTable
                 customers={customers}
                 onEdit={onEdit}
                 onDelete={onDelete}
+              />
+              <CustomerFormModal
+                customer={customer}
+                isModalVisible={isModalVisible}
+                handleOk={(values: any) => {
+                  console.log(values);
+                }}
+                handleCancel={() => {
+                  setIsModalVisible(false);
+                  setCustomer(null);
+                }}
               />
             </Card>
           </Col>
