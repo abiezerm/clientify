@@ -1,7 +1,33 @@
-import { Breadcrumb } from "antd";
+import { Breadcrumb, Button, Card, Col, Layout, Row } from "antd";
 import Head from "next/head";
+import CustomersTable from "../../../components/customers/CustomersTable";
+
+const customers = [
+  {
+    key: "1",
+    id: "asdasd",
+    firstName: "Lewandy",
+    lastName: "Dilone Bonifacio",
+    addresses: [1, 2],
+  },
+  {
+    key: "2",
+    id: "fghghehgf",
+    firstName: "Evan",
+    lastName: "You",
+    addresses: [1, 2, 3, 4, 5, 6],
+  },
+];
 
 export default function Index() {
+  const onEdit = () => {
+    //TODO: Edit a customer
+  };
+
+  const onDelete = () => {
+    //TODO: Delete a customer
+  };
+
   return (
     <>
       <Head>
@@ -13,7 +39,22 @@ export default function Index() {
         <Breadcrumb.Item>Clientify</Breadcrumb.Item>
         <Breadcrumb.Item>Customers</Breadcrumb.Item>
       </Breadcrumb>
-      <div>Customers page</div>
+      <Layout>
+        <Row>
+          <Col span={24}>
+            <Card
+              title="List of customers"
+              extra={<Button type="primary">New Customer</Button>}
+            >
+              <CustomersTable
+                customers={customers}
+                onEdit={onEdit}
+                onDelete={onDelete}
+              />
+            </Card>
+          </Col>
+        </Row>
+      </Layout>
     </>
   );
 }
