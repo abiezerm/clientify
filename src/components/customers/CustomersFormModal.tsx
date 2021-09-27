@@ -20,12 +20,14 @@ interface Props {
   isModalVisible: boolean;
   handleOk: any;
   handleCancel: any;
+  lockSave: boolean;
   customer: Customer | null;
 }
 
 export default function CustomerFormModal({
   customer,
   handleOk,
+  lockSave,
   handleCancel,
   isModalVisible,
 }: Props): ReactElement {
@@ -45,7 +47,7 @@ export default function CustomerFormModal({
 
   const onFinish = (values: any) => {
     resetForm();
-    handleOk({ ...values, addresses });
+    handleOk({ ...values, addresses, key: customer?.key });
   };
 
   const onNewAddress = (newAddress: any) => {
@@ -66,6 +68,7 @@ export default function CustomerFormModal({
 
       setAddresses(customer.addresses);
     } else {
+      setAddresses([]);
       formRef.current?.resetFields();
     }
   }, [customer]);
@@ -123,6 +126,7 @@ export default function CustomerFormModal({
       }}
       width={700}
       okText="Save"
+      okButtonProps={{ disabled: lockSave }}
       onCancel={() => {
         handleCancel();
         formRef.current?.resetFields();

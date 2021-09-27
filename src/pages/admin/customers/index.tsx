@@ -6,15 +6,24 @@ import { Breadcrumb, Button, Card, Col, Layout, notification, Row } from "antd";
 import CustomerFormModal from "../../../components/customers/CustomersFormModal";
 import CustomersTable from "../../../components/customers/CustomersTable";
 import { Customer } from "../../../components/customers/types";
-import { addNewCustomer, getCustomers } from "../../../services/customers";
+import {
+  createCustomer,
+  updateCustomer,
+  getCustomers,
+  removeCustomer,
+} from "../../../services/customers";
 
 export default function Index() {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [customer, setCustomer] = useState<Customer | null>(null);
   const [customers, setCustomers] = useState([]);
+  const [lockSave, setLockSave] = useState(false);
 
   const [tableIsLoading, setTableIsLoading] = useState<boolean>(false);
 
+  /**
+   * Get customers from data store.
+   */
   const fetchCustomers = () => {
     setTableIsLoading(true);
     getCustomers()
@@ -36,12 +45,28 @@ export default function Index() {
     setIsModalVisible(true);
   };
 
-  const onDelete = () => {
-    //TODO: Delete a customer
+  const onDelete = (id: any) => {
+    removeCustomer(id)
+      .then(() => {
+        notification.success({
+          message: "Customer Removed",
+        });
+        fetchCustomers();
+      })
+      .catch(() => {
+        notification.error({
+          message: "Error while removing the customer",
+        });
+      });
   };
 
-  const onAddNewCustomer = (newCustomer: any) => {
-    addNewCustomer(newCustomer)
+  /**
+   * Create new customer
+   * @param newCustomer
+   */
+  const addNewCustomer = (newCustomer: any) => {
+    setLockSave(true);
+    createCustomer(newCustomer)
       .then((response) => {
         if (response) {
           notification.success({
@@ -55,7 +80,46 @@ export default function Index() {
         notification.error({
           message: "Error while creating the customers",
         });
+      })
+      .finally(() => {
+        setLockSave(false);
       });
+  };
+
+  /**
+   * Create new customer
+   * @param newCustomer
+   */
+  const modifyCustomer = (newCustomer: any) => {
+    setLockSave(true);
+    updateCustomer(newCustomer)
+      .then((response) => {
+        if (response) {
+          notification.success({
+            message: "Customer Updated",
+          });
+          fetchCustomers();
+          setCustomer(null);
+          setIsModalVisible(false);
+        }
+      })
+      .catch(() => {
+        notification.error({
+          message: "Error while creating the customers",
+        });
+      })
+      .finally(() => {
+        setLockSave(false);
+      });
+  };
+
+  const handleOk = (newCustomer: any) => {
+    console.log(newCustomer);
+    if (newCustomer.key) {
+      modifyCustomer(newCustomer);
+    } else {
+      addNewCustomer(newCustomer);
+    }
   };
 
   useEffect(() => {
@@ -96,9 +160,10 @@ export default function Index() {
                 onDelete={onDelete}
               />
               <CustomerFormModal
+                lockSave={lockSave}
                 customer={customer}
                 isModalVisible={isModalVisible}
-                handleOk={onAddNewCustomer}
+                handleOk={handleOk}
                 handleCancel={() => {
                   setIsModalVisible(false);
                   setCustomer(null);

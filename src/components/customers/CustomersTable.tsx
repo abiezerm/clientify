@@ -53,18 +53,13 @@ export default function CustomersTable({
           <Popconfirm
             title="Are you sure to delete this customer?"
             onConfirm={() => {
-              alert("Delete");
+              onDelete(record.key);
             }}
             onCancel={() => {}}
             okText="Yes"
             cancelText="No"
           >
-            <Button
-              danger
-              onClick={() => {
-                onDelete(record.id);
-              }}
-            >
+            <Button danger>
               <DeleteOutlined type="danger" />
             </Button>
           </Popconfirm>
