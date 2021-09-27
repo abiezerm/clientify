@@ -6,7 +6,7 @@ import { Breadcrumb, Button, Card, Col, Layout, notification, Row } from "antd";
 import CustomerFormModal from "../../../components/customers/CustomersFormModal";
 import CustomersTable from "../../../components/customers/CustomersTable";
 import { Customer } from "../../../components/customers/types";
-import { getCustomers } from "../../../services/customers";
+import { addNewCustomer, getCustomers } from "../../../services/customers";
 
 export default function Index() {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
@@ -15,16 +15,7 @@ export default function Index() {
 
   const [tableIsLoading, setTableIsLoading] = useState<boolean>(false);
 
-  const onEdit = (customer: Customer) => {
-    setCustomer(customer);
-    setIsModalVisible(true);
-  };
-
-  const onDelete = () => {
-    //TODO: Delete a customer
-  };
-
-  useEffect(() => {
+  const fetchCustomers = () => {
     setTableIsLoading(true);
     getCustomers()
       .then((data) => {
@@ -38,6 +29,37 @@ export default function Index() {
       .finally(() => {
         setTableIsLoading(false);
       });
+  };
+
+  const onEdit = (customer: Customer) => {
+    setCustomer(customer);
+    setIsModalVisible(true);
+  };
+
+  const onDelete = () => {
+    //TODO: Delete a customer
+  };
+
+  const onAddNewCustomer = (newCustomer: any) => {
+    addNewCustomer(newCustomer)
+      .then((response) => {
+        if (response) {
+          notification.success({
+            message: "Customer Created",
+          });
+          fetchCustomers();
+          setIsModalVisible(false);
+        }
+      })
+      .catch(() => {
+        notification.error({
+          message: "Error while creating the customers",
+        });
+      });
+  };
+
+  useEffect(() => {
+    fetchCustomers();
   }, []);
 
   return (
@@ -76,9 +98,7 @@ export default function Index() {
               <CustomerFormModal
                 customer={customer}
                 isModalVisible={isModalVisible}
-                handleOk={(values: any) => {
-                  console.log(values);
-                }}
+                handleOk={onAddNewCustomer}
                 handleCancel={() => {
                   setIsModalVisible(false);
                   setCustomer(null);

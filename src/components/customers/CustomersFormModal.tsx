@@ -38,7 +38,13 @@ export default function CustomerFormModal({
     [customer]
   );
 
+  const resetForm = () => {
+    setAddresses([]);
+    formRef.current?.resetFields();
+  };
+
   const onFinish = (values: any) => {
+    resetForm();
     handleOk({ ...values, addresses });
   };
 
@@ -159,7 +165,9 @@ export default function CustomerFormModal({
         <Col span={24}>
           <Table
             size={"small"}
-            key="address"
+            rowKey={(record) =>
+              `${record.address}-${record.city}-${record.country}`
+            }
             dataSource={addresses}
             columns={addressesTableColumns}
           />
