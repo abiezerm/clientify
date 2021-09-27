@@ -5,10 +5,16 @@ import { Customer } from "./types";
 interface Props {
   onEdit: Function;
   onDelete: Function;
+  loading: boolean;
   customers: Array<Customer>;
 }
 
-export default function CustomersTable({ customers, onEdit, onDelete }: Props) {
+export default function CustomersTable({
+  onEdit,
+  onDelete,
+  customers,
+  loading,
+}: Props) {
   const columns = [
     {
       title: "First Name",
@@ -67,5 +73,5 @@ export default function CustomersTable({ customers, onEdit, onDelete }: Props) {
     },
   ];
 
-  return <Table dataSource={customers} columns={columns} />;
+  return <Table loading={loading} dataSource={customers} columns={columns} />;
 }

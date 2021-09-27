@@ -1,60 +1,19 @@
-import { Breadcrumb, Button, Card, Col, Layout, Row } from "antd";
+import { useEffect, useState } from "react";
 import Head from "next/head";
-import { useState } from "react";
+
+import { Breadcrumb, Button, Card, Col, Layout, notification, Row } from "antd";
+
 import CustomerFormModal from "../../../components/customers/CustomersFormModal";
 import CustomersTable from "../../../components/customers/CustomersTable";
 import { Customer } from "../../../components/customers/types";
-
-const customers = [
-  {
-    key: "1",
-    id: "asdasd",
-    firstName: "Lewandy",
-    lastName: "Dilone Bonifacio",
-    addresses: [
-      {
-        key: "blif7fo7fo68f",
-        zip: 51000,
-        city: "Santiago de los Caballeros",
-        address: "La herradura",
-        country: "Republica Dominicana",
-      },
-      {
-        key: "jhf2f7tfo8t4f",
-        zip: 231,
-        city: "New York",
-        address: "Santiago",
-        country: "United State",
-      },
-    ],
-  },
-  {
-    key: "2",
-    id: "fghghehgf",
-    firstName: "Evan",
-    lastName: "You",
-    addresses: [
-      {
-        key: "blif7fo7fo68f",
-        zip: 51000,
-        city: "Santiago de los Caballeros",
-        address: "Baitoa",
-        country: "Republica Dominicana",
-      },
-      {
-        key: "jhf2f7tfo8t4f",
-        zip: 231,
-        city: "New York",
-        address: "Santo Domingo",
-        country: "United State",
-      },
-    ],
-  },
-];
+import { getCustomers } from "../../../services/customers";
 
 export default function Index() {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [customer, setCustomer] = useState<Customer | null>(null);
+  const [customers, setCustomers] = useState([]);
+
+  const [tableIsLoading, setTableIsLoading] = useState<boolean>(false);
 
   const onEdit = (customer: Customer) => {
     setCustomer(customer);
@@ -64,6 +23,22 @@ export default function Index() {
   const onDelete = () => {
     //TODO: Delete a customer
   };
+
+  useEffect(() => {
+    setTableIsLoading(true);
+    getCustomers()
+      .then((data) => {
+        setCustomers(data);
+      })
+      .catch(() => {
+        notification.error({
+          message: "Error while getting the customers",
+        });
+      })
+      .finally(() => {
+        setTableIsLoading(false);
+      });
+  }, []);
 
   return (
     <>
@@ -94,6 +69,7 @@ export default function Index() {
             >
               <CustomersTable
                 customers={customers}
+                loading={tableIsLoading}
                 onEdit={onEdit}
                 onDelete={onDelete}
               />

@@ -39,7 +39,7 @@ export default function CustomerFormModal({
   );
 
   const onFinish = (values: any) => {
-    handleOk(values);
+    handleOk({ ...values, addresses });
   };
 
   const onNewAddress = (newAddress: any) => {
