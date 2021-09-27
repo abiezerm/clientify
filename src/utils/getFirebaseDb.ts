@@ -2,6 +2,10 @@
 import { getFirestore } from "@firebase/firestore";
 import { initializeApp, FirebaseOptions } from "firebase/app";
 
+
+/**
+ * DISCLAIMER: These credentials are for testing purposes, do not try this on production!.
+ */
 const firebaseConfig: FirebaseOptions = {
   apiKey: "AIzaSyC63MCXfCGLLmmb81hcbk5Xy2gNocA-qJA",
   authDomain: "clientify-ed438.firebaseapp.com",
